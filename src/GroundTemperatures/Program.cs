@@ -21,30 +21,35 @@ namespace GroundTemperatures
 
             var scraper = new GroundTemperatureScraper("a2f0d7a4", "742a069efe55c7015c2245032fb16bbb");
             var location = "40.7607793,-111.8910474"; // SLC
-            var startYear = 2013;
-            var totalYears = 10;
+            var startYear = 2000;
+            var totalYears = 20;
             var values = await GetGroundTemperatures(scraper, location, startYear, totalYears);
 
-            var temps = values.Single().Value
+            var averages = values.Single().Value
                 .Select(x => new
                 {
                     date = DateOnly.Parse(x.Key),
-                    temp_f = x.Value.soil_temp_0to10cm.value,
-                });
-
-            var averaged = temps
+                    avg_temp_f = x.Value.soil_temp_0to10cm.value,
+                    min_temp_f = x.Value.soil_temp_min_0to10cm.value,
+                    max_temp_f = x.Value.soil_temp_max_0to10cm.value,
+                })
                 .GroupBy(x => new { x.date.Month, x.date.Day })
                 .OrderBy(x => x.Key.Month).ThenBy(x => x.Key.Day)
                 .Select(x => new
                 {
                     month = x.Key.Month,
                     day = x.Key.Day,
-                    temp_f = x.Average(y => y.temp_f),
+                    avg_temp_f = x.Average(y => y.avg_temp_f),
+                    min_temp_f = x.Min(y => y.min_temp_f),
+                    max_temp_f = x.Max(y => y.max_temp_f),
+                    stdev = x.StdDev(y => y.avg_temp_f),
                 });
 
-            var outputFileName = $"soil-temps-{startYear}-{startYear + totalYears - 1}.csv";
+            var outputFileName = $"soil-temps-10cm-{startYear}-{startYear + totalYears - 1}.csv";
             var csvPath = SlnFileResolver.ResolvePathRelativeToSln(outputFileName);
-            var rowsWritten = await WriteToCsvAsync(averaged, csvPath);
+
+            Console.WriteLine($"Writing to CSV: {csvPath}");
+            var rowsWritten = await WriteToCsvAsync(averages, csvPath);
 
             Console.WriteLine("Done!  ({0}: rows)", rowsWritten);
         }
@@ -88,7 +93,14 @@ namespace GroundTemperatures
         private static async Task<FooResult> GetGroundTemperatures(GroundTemperatureScraper scraper, string location, int startYear, int totalYears)
         {
             var years = Enumerable.Range(startYear, totalYears).ToArray();
-            var tasks = years.Select(x => scraper.GetGroundTemperatures(location, x));
+            var tasks = years.Select(x => Task.Run(async () =>
+            {
+                Console.WriteLine($"Querying year {x}");
+                var result = await scraper.GetGroundTemperatures(location, x);
+                Console.WriteLine($"Finished querying year {x}");
+
+                return result;
+            }));
             var allResults = await Task.WhenAll(tasks);
 
             var result = new FooResult();
