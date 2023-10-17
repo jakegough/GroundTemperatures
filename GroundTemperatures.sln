@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32901.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GroundTemperatures", "src\GroundTemperatures\GroundTemperatures.csproj", "{47899509-CD58-49CA-AF34-B84101C3341B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution ITems", "Solution ITems", "{2AEE69B8-32C2-4260-B72A-4257E0580D2B}"
+	ProjectSection(SolutionItems) = preProject
+		slc-soil-temps-2013-2022.csv = slc-soil-temps-2013-2022.csv
+		slc-soil-temps-2013-2022.json = slc-soil-temps-2013-2022.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47899509-CD58-49CA-AF34-B84101C3341B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47899509-CD58-49CA-AF34-B84101C3341B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47899509-CD58-49CA-AF34-B84101C3341B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47899509-CD58-49CA-AF34-B84101C3341B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E076F1E8-0466-411F-A3D2-41210C3FA7C6}
+	EndGlobalSection
+EndGlobal
